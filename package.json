@@ -1,0 +1,15 @@
+{
+  "name": "threeoctree",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Brakebein/threeoctree.git"
+  },
+  "devDependencies": {
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "three": "^0.110.0"
+  }
+}
