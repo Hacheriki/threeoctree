@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outFile": "./dist/octree.js",
+    "declaration": true,
+    "module": "amd",
+    "moduleResolution": "node",
+    "target": "es5",
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  },
+  "files": [
+    "src/index.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

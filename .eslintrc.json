@@ -1,0 +1,190 @@
+{
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true
+    },
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "rules": {
+        "array-bracket-spacing": [
+            "error",
+            "always",
+            {
+                "singleValue": true,
+                "arraysInArrays": false
+            }
+        ],
+        "block-spacing": [
+            "error",
+            "always"
+        ],
+        "brace-style": [
+            "error",
+            "1tbs",
+            {
+                "allowSingleLine": true
+            }
+        ],
+        "comma-spacing": [
+            "error",
+            {
+                "before": false,
+                "after": true
+            }
+        ],
+        "comma-style": [
+            2,
+            "last"
+        ],
+        "computed-property-spacing": [
+            "error",
+            "always"
+        ],
+        "eol-last": [
+            "error",
+            "always"
+        ],
+        "func-call-spacing": [
+            "error",
+            "never"
+        ],
+        "indent": [
+            "error",
+            "tab",
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "key-spacing": [
+            "error",
+            {
+                "beforeColon": false
+            }
+        ],
+        "new-parens": [
+            "error"
+        ],
+        "no-trailing-spaces": [
+            "error",
+            {
+                "skipBlankLines": false
+            }
+        ],
+        "no-whitespace-before-property": [
+            "error"
+        ],
+        "object-curly-spacing": [
+            "error",
+            "always"
+        ],
+        "padded-blocks": [
+            "error",
+            {
+                "blocks": "always",
+                "switches": "always",
+                "classes": "always"
+            }
+        ],
+        "semi": [
+            "error",
+            "always",
+            {
+                "omitLastInOneLineBlock": true
+            }
+        ],
+        "semi-spacing": [
+            "error",
+            {
+                "before": false,
+                "after": true
+            }
+        ],
+        "space-before-blocks": [
+            "error",
+            {
+                "functions": "always",
+                "keywords": "always",
+                "classes": "always"
+            }
+        ],
+        "space-before-function-paren": [
+            "error",
+            {
+                "anonymous": "always",
+                "named": "never",
+                "asyncArrow": "ignore"
+            }
+        ],
+        "space-in-parens": [
+            "error",
+            "always"
+        ],
+        "space-infix-ops": [
+            "error"
+        ],
+        "space-unary-ops": [
+            "error",
+            {
+                "words": true,
+                "nonwords": true,
+                "overrides": {}
+            }
+        ],
+        "keyword-spacing": [
+            "error",
+            {
+                "before": true,
+                "after": true
+            }
+        ],
+        "padding-line-between-statements": [
+            "error",
+            {
+                "blankLine": "always",
+                "prev": "block-like",
+                "next": "*"
+            },
+            {
+                "blankLine": "always",
+                "prev": "*",
+                "next": ["block-like", "return"]
+            },
+            {
+                "blankLine": "always",
+                "prev": ["const", "let", "var"],
+                "next": "*"
+            },
+            {
+                "blankLine": "any",
+                "prev": ["const", "let", "var"],
+                "next": ["const", "let", "var"]
+            }
+        ],
+        "no-multiple-empty-lines": [
+            "error",
+            {
+                "max": 1
+            }
+        ],
+        "no-multi-spaces": 2,
+        "no-undef": 1,
+        "no-unused-vars": 1,
+        "no-extra-semi": 1,
+        "lines-around-comment": [
+            "error",
+            {
+                "beforeBlockComment": true,
+                "afterBlockComment": true,
+                "beforeLineComment": true,
+                "afterLineComment": true,
+                "allowBlockStart": true
+            }
+        ]
+    },
+    "globals": {
+        "THREE": false,
+        "console": true
+    }
+}
