@@ -1,10 +1,13 @@
 {
   "compilerOptions": {
-    "outFile": "./dist/octree.js",
-    "declaration": true,
-    "module": "amd",
+    "outDir": "./dist",
+    "module": "commonjs",
     "moduleResolution": "node",
     "target": "es5",
+    "sourceMap": false,
+    "removeComments": false,
+    "declaration": true,
+    "declarationDir": "./types",
     "lib": [
       "es2018",
       "dom"

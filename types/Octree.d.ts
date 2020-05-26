@@ -1,0 +1,63 @@
+import { BoxBufferGeometry, Face3, Mesh, MeshBasicMaterial, Object3D, Scene, Vector3 } from 'three';
+import { OctreeNode } from './OctreeNode';
+import { OctreeObjectData } from './OctreeObjectData';
+import { ObjectOptions, OctreeParameters, ResultData } from './interfaces';
+export declare class Octree {
+    nodeCount: number;
+    INDEX_INSIDE_CROSS: number;
+    INDEX_OUTSIDE_OFFSET: number;
+    INDEX_OUTSIDE_POS_X: number;
+    INDEX_OUTSIDE_NEG_X: number;
+    INDEX_OUTSIDE_POS_Y: number;
+    INDEX_OUTSIDE_NEG_Y: number;
+    INDEX_OUTSIDE_POS_Z: number;
+    INDEX_OUTSIDE_NEG_Z: number;
+    INDEX_OUTSIDE_MAP: {
+        index: number;
+        count: number;
+        x: number;
+        y: number;
+        z: number;
+    }[];
+    FLAG_POS_X: number;
+    FLAG_NEG_X: number;
+    FLAG_POS_Y: number;
+    FLAG_NEG_Y: number;
+    FLAG_POS_Z: number;
+    FLAG_NEG_Z: number;
+    utilVec31Search: Vector3;
+    utilVec32Search: Vector3;
+    scene: Scene;
+    visualGeometry: BoxBufferGeometry;
+    visualMaterial: MeshBasicMaterial;
+    objects: Mesh[];
+    objectsMap: {
+        [key: string]: Mesh;
+    };
+    objectsData: OctreeObjectData[];
+    objectsDeferred: {
+        object: Mesh | OctreeObjectData;
+        options: ObjectOptions;
+    }[];
+    depthMax: number;
+    objectsThreshold: number;
+    overlapPct: number;
+    undeferred: boolean;
+    root: OctreeNode;
+    constructor(parameters?: OctreeParameters);
+    update(): void;
+    add(object: Mesh | OctreeObjectData, options?: ObjectOptions): void;
+    addDeferred(object: Mesh | OctreeObjectData, options?: ObjectOptions): void;
+    addObjectData(object: Mesh, part?: Face3 | Vector3): void;
+    remove(object: Mesh | OctreeObjectData): void;
+    extend(octree: Octree): void;
+    rebuild(): void;
+    updateObject(object: Object3D | OctreeObjectData): void;
+    search(position: Vector3, radius: number, organizeByObject?: boolean, direction?: Vector3): OctreeObjectData[] | ResultData[];
+    findClosestVertex(position: Vector3, radius: number): Vector3;
+    setRoot(root: OctreeNode): void;
+    getDepthEnd(): number;
+    getNodeCountEnd(): number;
+    getObjectCountEnd(): number;
+    toConsole(): void;
+}

@@ -4,7 +4,7 @@ import {
     BufferGeometry,
     Face3,
     Geometry,
-    Math as ThreeMath,
+    MathUtils,
     Mesh,
     MeshBasicMaterial,
     Object3D,
@@ -144,7 +144,7 @@ export class Octree {
 
         // check uuid to avoid duplicates
         if (!object.uuid) {
-            object.uuid = ThreeMath.generateUUID();
+            object.uuid = MathUtils.generateUUID();
         }
 
         if (!this.objectsMap[object.uuid]) {
