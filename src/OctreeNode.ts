@@ -752,7 +752,7 @@ export class OctreeNode {
 
         } else if (objectData instanceof OctreeNode) {
 
-            positionObj = objectData.radius;
+            positionObj = objectData.position;
             radiusObj = 0;
 
         }

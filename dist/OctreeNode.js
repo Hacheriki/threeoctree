@@ -506,7 +506,7 @@ var OctreeNode = /** @class */ (function () {
             objectData.positionLast.copy(positionObj);
         }
         else if (objectData instanceof OctreeNode) {
-            positionObj = objectData.radius;
+            positionObj = objectData.position;
             radiusObj = 0;
         }
         // find delta and distance
