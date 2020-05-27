@@ -62,7 +62,7 @@ export class OctreeNode {
         this.overlap = this.radius * this.tree.overlapPct;
         this.radiusOverlap = this.radius + this.overlap;
         this.left = this.position.x - this.radiusOverlap;
-        this.right = this.position.x - this.radiusOverlap;
+        this.right = this.position.x + this.radiusOverlap;
         this.bottom = this.position.y - this.radiusOverlap;
         this.top = this.position.y + this.radiusOverlap;
         this.back = this.position.z - this.radiusOverlap;
@@ -121,15 +121,18 @@ export class OctreeNode {
 
     reset(cascade = false, removeVisual = false) {
 
+        const nodesIndices = this.nodesIndices || [];
+        const nodesByIndex = this.nodesByIndex;
+
         this.objects = [];
         this.nodesIndices = [];
         this.nodesByIndex = {};
 
         // unset parent in nodes
 
-        for ( let i = 0, l = this.nodesIndices.length; i < l; i++ ) {
+        for ( let i = 0, l = nodesIndices.length; i < l; i++ ) {
 
-            const node = this.nodesByIndex[this.nodesIndices[i]];
+            const node = nodesByIndex[nodesIndices[i]];
 
             node.setParent(undefined);
 
@@ -360,23 +363,23 @@ export class OctreeNode {
 
             }
 
-            // if has objects to split
-            if (objectsSplit.length > 0) {
-                objectsRemaining = objectsRemaining.concat(this.split(objectsSplit, objectsSplitOctants));
-            }
-
-            // if has objects to expand
-            if (objectsExpand.length > 0) {
-                objectsRemaining = objectsRemaining.concat(this.expand(objectsExpand, objectsExpandOctants));
-            }
-
-            // store remaining
-            this.objects = objectsRemaining;
-
-            // merge check
-            this.checkMerge();
-
         }
+
+        // if has objects to split
+        if (objectsSplit.length > 0) {
+            objectsRemaining = objectsRemaining.concat(this.split(objectsSplit, objectsSplitOctants));
+        }
+
+        // if has objects to expand
+        if (objectsExpand.length > 0) {
+            objectsRemaining = objectsRemaining.concat(this.expand(objectsExpand, objectsExpandOctants));
+        }
+
+        // store remaining
+        this.objects = objectsRemaining;
+
+        // merge check
+        this.checkMerge();
 
     }
 
@@ -764,8 +767,8 @@ export class OctreeNode {
         const deltaZ = positionObj.z - this.position.z;
 
         const distX = Math.abs(deltaX);
-        const distY = Math.abs(deltaX);
-        const distZ = Math.abs(deltaX);
+        const distY = Math.abs(deltaY);
+        const distZ = Math.abs(deltaZ);
         const distance = Math.max(distX, distY, distZ);
 
         let indexOctant = 0;
@@ -893,8 +896,8 @@ export class OctreeNode {
 
         if (pz < this.back) {
             distance -= Math.pow(pz - this.back, 2);
-        } else if (pz > this.back) {
-            distance -= Math.pow(pz - this.back, 2);
+        } else if (pz > this.front) {
+            distance -= Math.pow(pz - this.front, 2);
         }
 
         return distance >= 0;
@@ -911,8 +914,8 @@ export class OctreeNode {
         const t2 = (this.right - origin.x) * directionPct.x;
         const t3 = (this.bottom - origin.y) * directionPct.y;
         const t4 = (this.top - origin.y) * directionPct.y;
-        const t5 = (this.back - origin.z) * directionPct.y;
-        const t6 = (this.front - origin.z) * directionPct.y;
+        const t5 = (this.back - origin.z) * directionPct.z;
+        const t6 = (this.front - origin.z) * directionPct.z;
 
         const tmax = Math.min(Math.min(Math.max(t1, t2), Math.max(t3, t4)), Math.max(t5, t6));
 

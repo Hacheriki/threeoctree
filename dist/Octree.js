@@ -32,6 +32,12 @@ var Octree = /** @class */ (function () {
         this.INDEX_OUTSIDE_MAP[this.INDEX_OUTSIDE_NEG_Y] = { index: this.INDEX_OUTSIDE_NEG_Y, count: 0, x: 0, y: -1, z: 0 };
         this.INDEX_OUTSIDE_MAP[this.INDEX_OUTSIDE_POS_Z] = { index: this.INDEX_OUTSIDE_POS_Z, count: 0, x: 0, y: 0, z: 1 };
         this.INDEX_OUTSIDE_MAP[this.INDEX_OUTSIDE_NEG_Z] = { index: this.INDEX_OUTSIDE_NEG_Z, count: 0, x: 0, y: 0, z: -1 };
+        this.FLAG_POS_X = 1 << (this.INDEX_OUTSIDE_POS_X + 1);
+        this.FLAG_NEG_X = 1 << (this.INDEX_OUTSIDE_NEG_X + 1);
+        this.FLAG_POS_Y = 1 << (this.INDEX_OUTSIDE_POS_Y + 1);
+        this.FLAG_NEG_Y = 1 << (this.INDEX_OUTSIDE_NEG_Y + 1);
+        this.FLAG_POS_Z = 1 << (this.INDEX_OUTSIDE_POS_Z + 1);
+        this.FLAG_NEG_Z = 1 << (this.INDEX_OUTSIDE_NEG_Z + 1);
         // pass scene to see octree structure
         this.scene = parameters.scene;
         if (this.scene) {

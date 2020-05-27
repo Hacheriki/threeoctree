@@ -7,6 +7,7 @@
     "parserOptions": {
         "sourceType": "module"
     },
+    "ignorePatterns": ["threeoctree.js"],
     "rules": {
         "array-bracket-spacing": [
             "error",

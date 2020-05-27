@@ -30,7 +30,7 @@ var OctreeNode = /** @class */ (function () {
         this.overlap = this.radius * this.tree.overlapPct;
         this.radiusOverlap = this.radius + this.overlap;
         this.left = this.position.x - this.radiusOverlap;
-        this.right = this.position.x - this.radiusOverlap;
+        this.right = this.position.x + this.radiusOverlap;
         this.bottom = this.position.y - this.radiusOverlap;
         this.top = this.position.y + this.radiusOverlap;
         this.back = this.position.z - this.radiusOverlap;
@@ -68,12 +68,14 @@ var OctreeNode = /** @class */ (function () {
     OctreeNode.prototype.reset = function (cascade, removeVisual) {
         if (cascade === void 0) { cascade = false; }
         if (removeVisual === void 0) { removeVisual = false; }
+        var nodesIndices = this.nodesIndices || [];
+        var nodesByIndex = this.nodesByIndex;
         this.objects = [];
         this.nodesIndices = [];
         this.nodesByIndex = {};
         // unset parent in nodes
-        for (var i = 0, l = this.nodesIndices.length; i < l; i++) {
-            var node = this.nodesByIndex[this.nodesIndices[i]];
+        for (var i = 0, l = nodesIndices.length; i < l; i++) {
+            var node = nodesByIndex[nodesIndices[i]];
             node.setParent(undefined);
             if (cascade === true) {
                 node.reset(cascade, removeVisual);
@@ -227,19 +229,19 @@ var OctreeNode = /** @class */ (function () {
                 // lies across bounts between octants
                 objectsRemaining.push(object);
             }
-            // if has objects to split
-            if (objectsSplit.length > 0) {
-                objectsRemaining = objectsRemaining.concat(this.split(objectsSplit, objectsSplitOctants));
-            }
-            // if has objects to expand
-            if (objectsExpand.length > 0) {
-                objectsRemaining = objectsRemaining.concat(this.expand(objectsExpand, objectsExpandOctants));
-            }
-            // store remaining
-            this.objects = objectsRemaining;
-            // merge check
-            this.checkMerge();
         }
+        // if has objects to split
+        if (objectsSplit.length > 0) {
+            objectsRemaining = objectsRemaining.concat(this.split(objectsSplit, objectsSplitOctants));
+        }
+        // if has objects to expand
+        if (objectsExpand.length > 0) {
+            objectsRemaining = objectsRemaining.concat(this.expand(objectsExpand, objectsExpandOctants));
+        }
+        // store remaining
+        this.objects = objectsRemaining;
+        // merge check
+        this.checkMerge();
     };
     OctreeNode.prototype.split = function (objects, octants) {
         var objectsRemaining;
@@ -514,8 +516,8 @@ var OctreeNode = /** @class */ (function () {
         var deltaY = positionObj.y - this.position.y;
         var deltaZ = positionObj.z - this.position.z;
         var distX = Math.abs(deltaX);
-        var distY = Math.abs(deltaX);
-        var distZ = Math.abs(deltaX);
+        var distY = Math.abs(deltaY);
+        var distZ = Math.abs(deltaZ);
         var distance = Math.max(distX, distY, distZ);
         var indexOctant = 0;
         // if outside, use bitwise flags to indicate on which sides object is outside of
@@ -620,8 +622,8 @@ var OctreeNode = /** @class */ (function () {
         if (pz < this.back) {
             distance -= Math.pow(pz - this.back, 2);
         }
-        else if (pz > this.back) {
-            distance -= Math.pow(pz - this.back, 2);
+        else if (pz > this.front) {
+            distance -= Math.pow(pz - this.front, 2);
         }
         return distance >= 0;
     };
@@ -633,8 +635,8 @@ var OctreeNode = /** @class */ (function () {
         var t2 = (this.right - origin.x) * directionPct.x;
         var t3 = (this.bottom - origin.y) * directionPct.y;
         var t4 = (this.top - origin.y) * directionPct.y;
-        var t5 = (this.back - origin.z) * directionPct.y;
-        var t6 = (this.front - origin.z) * directionPct.y;
+        var t5 = (this.back - origin.z) * directionPct.z;
+        var t6 = (this.front - origin.z) * directionPct.z;
         var tmax = Math.min(Math.min(Math.max(t1, t2), Math.max(t3, t4)), Math.max(t5, t6));
         // ray would intersect in reverse direction, i.e. this is behind ray
         if (tmax < 0) {
