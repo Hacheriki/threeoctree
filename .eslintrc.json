@@ -7,7 +7,7 @@
     "parserOptions": {
         "sourceType": "module"
     },
-    "ignorePatterns": ["threeoctree.js"],
+    "ignorePatterns": ["threeoctree.js", "rollup.config.js"],
     "rules": {
         "array-bracket-spacing": [
             "error",

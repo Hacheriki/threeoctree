@@ -1,20 +1,17 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
-    "module": "commonjs",
+    "module": "es6",
     "moduleResolution": "node",
     "target": "es5",
     "sourceMap": false,
     "removeComments": false,
-    "declaration": true,
-    "declarationDir": "./types",
     "lib": [
       "es2018",
       "dom"
     ]
   },
-  "files": [
-    "src/index.ts"
+  "include": [
+    "./src/**/*"
   ],
   "exclude": [
     "node_modules"

@@ -5,19 +5,24 @@
     "type": "git",
     "url": "git@github.com:Brakebein/threeoctree.git"
   },
-  "main": "dist/index.js",
+  "main": "dist/build.js",
   "types": "types/index.d.ts",
   "scripts": {
-    "build": "npx tsc"
+    "build": "npx rollup -c && npx tsc -d --emitDeclarationOnly --declarationDir types"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "@rollup/plugin-typescript": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^2.9.0",
     "@typescript-eslint/parser": "^2.9.0",
     "eslint": "^6.7.1",
+    "rollup": "^2.32.1",
+    "three": "^0.116.1",
+    "tslib": "^2.0.3",
     "tslint": "^5.20.1",
     "typescript": "^3.7.2"
   },
   "peerDependencies": {
-    "three": "^0.113.0"
+    "three": "^0.116.1"
   }
 }
