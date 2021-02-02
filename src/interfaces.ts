@@ -1,7 +1,7 @@
-import {Face3, Mesh, Scene, Vector3} from 'three';
-import {OctreeNode} from './OctreeNode';
-import {Octree} from './Octree';
-import {OctreeObjectData} from './OctreeObjectData';
+import { Face, Mesh, Scene, Vector3 } from 'three';
+import { OctreeNode } from './OctreeNode';
+import { Octree } from './Octree';
+import { OctreeObjectData } from './OctreeObjectData';
 
 export interface OctreeParameters {
     tree?: Octree;
@@ -42,7 +42,7 @@ export interface GenericObject {
 
 export interface ResultData {
     object: Mesh;
-    faces: Face3[];
+    faces: Face[];
     vertices: Vector3[];
 }
 

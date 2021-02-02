@@ -1,17 +1,16 @@
 import {
     BufferAttribute,
-    BufferGeometry,
-    Face3,
+    Face,
     Mesh,
     Vector3
 } from 'three';
-import {OctreeNode} from './OctreeNode';
+import { OctreeNode } from './OctreeNode';
 
 export class OctreeObjectData {
 
     node: OctreeNode;
     object: Mesh;
-    faces: Face3;
+    faces: Face;
     vertices: Vector3;
     useFaces = false;
     useVertices = false;
@@ -20,18 +19,18 @@ export class OctreeObjectData {
     positionLast: Vector3;
     indexOctant?: number;
 
-    constructor(object: Mesh, part?: Face3 | Vector3) {
+    constructor(object: Mesh, part?: Face | Vector3) {
 
         this.object = object;
 
         // handle part by type
 
-        if (part instanceof Face3) {
-            this.faces = part;
-            this.useFaces = true;
-        } else if (part instanceof Vector3) {
+        if (part instanceof Vector3) {
             this.vertices = part;
             this.useVertices = true;
+        } else if (part) {
+            this.faces = part;
+            this.useFaces = true;
         }
 
 
@@ -77,38 +76,23 @@ export class OctreeObjectData {
 
     }
 
-    getFace3BoundingSphere(object: Mesh, face: Face3): {center: Vector3, radius: number} {
+    getFace3BoundingSphere(object: Mesh, face: Face): {center: Vector3, radius: number} {
 
         let va: Vector3;
         let vb: Vector3;
         let vc: Vector3;
 
-        if (object.geometry instanceof BufferGeometry) {
+        const position = object.geometry.attributes.position as BufferAttribute;
 
-            // BufferGeometry
-
-            const position = object.geometry.attributes.position as BufferAttribute;
-
-            va = new Vector3().fromBufferAttribute(position, face.a);
-            vb = new Vector3().fromBufferAttribute(position, face.b);
-            vc = new Vector3().fromBufferAttribute(position, face.c);
-            // const indexA = face.a * position.itemSize;
-            // va = new Vector3(position.array[indexA], position.array[indexA + 1], position.array[indexA + 2]);
-            // const indexB = face.b * position.itemSize;
-            // vb = new Vector3(position.array[indexB], position.array[indexB + 1], position.array[indexB + 2]);
-            // const indexC = face.c * position.itemSize;
-            // va = new Vector3(position.array[indexC], position.array[indexC + 1], position.array[indexC + 2]);
-
-        } else {
-
-            // Geometry
-
-            const vertices = object.geometry.vertices;
-            va = vertices[face.a];
-            vb = vertices[face.b];
-            vc = vertices[face.c];
-
-        }
+        va = new Vector3().fromBufferAttribute(position, face.a);
+        vb = new Vector3().fromBufferAttribute(position, face.b);
+        vc = new Vector3().fromBufferAttribute(position, face.c);
+        // const indexA = face.a * position.itemSize;
+        // va = new Vector3(position.array[indexA], position.array[indexA + 1], position.array[indexA + 2]);
+        // const indexB = face.b * position.itemSize;
+        // vb = new Vector3(position.array[indexB], position.array[indexB + 1], position.array[indexB + 2]);
+        // const indexC = face.c * position.itemSize;
+        // va = new Vector3(position.array[indexC], position.array[indexC + 1], position.array[indexC + 2]);
 
         const utilVec3 = new Vector3();
         const center = new Vector3().addVectors(va, vb).add(vc).divideScalar(3);

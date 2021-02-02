@@ -10,13 +10,13 @@
             this.useVertices = false;
             this.object = object;
             // handle part by type
-            if (part instanceof three.Face3) {
-                this.faces = part;
-                this.useFaces = true;
-            }
-            else if (part instanceof three.Vector3) {
+            if (part instanceof three.Vector3) {
                 this.vertices = part;
                 this.useVertices = true;
+            }
+            else if (part) {
+                this.faces = part;
+                this.useFaces = true;
             }
             this.radius = 0;
             this.position = new three.Vector3();
@@ -50,26 +50,16 @@
             var va;
             var vb;
             var vc;
-            if (object.geometry instanceof three.BufferGeometry) {
-                // BufferGeometry
-                var position = object.geometry.attributes.position;
-                va = new three.Vector3().fromBufferAttribute(position, face.a);
-                vb = new three.Vector3().fromBufferAttribute(position, face.b);
-                vc = new three.Vector3().fromBufferAttribute(position, face.c);
-                // const indexA = face.a * position.itemSize;
-                // va = new Vector3(position.array[indexA], position.array[indexA + 1], position.array[indexA + 2]);
-                // const indexB = face.b * position.itemSize;
-                // vb = new Vector3(position.array[indexB], position.array[indexB + 1], position.array[indexB + 2]);
-                // const indexC = face.c * position.itemSize;
-                // va = new Vector3(position.array[indexC], position.array[indexC + 1], position.array[indexC + 2]);
-            }
-            else {
-                // Geometry
-                var vertices = object.geometry.vertices;
-                va = vertices[face.a];
-                vb = vertices[face.b];
-                vc = vertices[face.c];
-            }
+            var position = object.geometry.attributes.position;
+            va = new three.Vector3().fromBufferAttribute(position, face.a);
+            vb = new three.Vector3().fromBufferAttribute(position, face.b);
+            vc = new three.Vector3().fromBufferAttribute(position, face.c);
+            // const indexA = face.a * position.itemSize;
+            // va = new Vector3(position.array[indexA], position.array[indexA + 1], position.array[indexA + 2]);
+            // const indexB = face.b * position.itemSize;
+            // vb = new Vector3(position.array[indexB], position.array[indexB + 1], position.array[indexB + 2]);
+            // const indexC = face.c * position.itemSize;
+            // va = new Vector3(position.array[indexC], position.array[indexC + 1], position.array[indexC + 2]);
             var utilVec3 = new three.Vector3();
             var center = new three.Vector3().addVectors(va, vb).add(vc).divideScalar(3);
             var radius = Math.max(utilVec3.subVectors(center, va).length(), utilVec3.subVectors(center, vb).length(), utilVec3.subVectors(center, vc).length());
@@ -872,6 +862,9 @@
             if (object instanceof OctreeObjectData) {
                 object = object.object;
             }
+            if (!(object.geometry instanceof three.BufferGeometry)) {
+                throw new Error('Unsupported geometry type: Use BufferGeometry!');
+            }
             // check uuid to avoid duplicates
             if (!object.uuid) {
                 object.uuid = three.MathUtils.generateUUID();
@@ -895,35 +888,27 @@
                             this.addObjectData(object, new three.Vector3().fromBufferAttribute(position, i));
                         }
                     }
-                    else if (object.geometry instanceof three.Geometry) {
-                        var vertices = object.geometry.vertices;
-                        for (var i = 0, l = vertices.length; i < l; i++) {
-                            this.addObjectData(object, vertices[i]);
-                        }
-                    }
                 }
                 else if (useFaces === true) {
-                    if (object.geometry instanceof three.BufferGeometry) {
-                        var position = object.geometry.attributes.position;
-                        var index = object.geometry.index;
-                        // TODO: support face/vertex normals and colors?
-                        if (index) {
-                            // indexed triangles
-                            for (var i = 0, l = index.count; i < l; i += 3) {
-                                this.addObjectData(object, new three.Face3(i, i + 1, i + 2));
-                            }
-                        }
-                        else {
-                            // every 3 vertices are one triangle
-                            for (var i = 0, l = position.count; i < l; i += 3) {
-                                this.addObjectData(object, new three.Face3(i, i + 1, i + 2));
-                            }
+                    var position = object.geometry.attributes.position;
+                    var index = object.geometry.index;
+                    // TODO: support face/vertex normals and colors?
+                    if (index) {
+                        // indexed triangles
+                        for (var i = 0, l = index.count; i < l; i += 3) {
+                            this.addObjectData(object, {
+                                a: i, b: i + 1, c: i + 2,
+                                normal: new three.Vector3(), materialIndex: 0
+                            });
                         }
                     }
-                    else if (object.geometry instanceof three.Geometry) {
-                        var faces = object.geometry.faces;
-                        for (var i = 0, l = faces.length; i < l; i++) {
-                            this.addObjectData(object, faces[i]);
+                    else {
+                        // every 3 vertices are one triangle
+                        for (var i = 0, l = position.count; i < l; i += 3) {
+                            this.addObjectData(object, {
+                                a: i, b: i + 1, c: i + 2,
+                                normal: new three.Vector3(), materialIndex: 0
+                            });
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-import { BoxBufferGeometry, Face3, Mesh, MeshBasicMaterial, Object3D, Scene, Vector3 } from 'three';
+import { BoxBufferGeometry, Face, Mesh, MeshBasicMaterial, Object3D, Scene, Vector3 } from 'three';
 import { OctreeNode } from './OctreeNode';
 import { OctreeObjectData } from './OctreeObjectData';
 import { ObjectOptions, OctreeParameters, ResultData } from './interfaces';
@@ -48,7 +48,7 @@ export declare class Octree {
     update(): void;
     add(object: Mesh | OctreeObjectData, options?: ObjectOptions): void;
     addDeferred(object: Mesh | OctreeObjectData, options?: ObjectOptions): void;
-    addObjectData(object: Mesh, part?: Face3 | Vector3): void;
+    addObjectData(object: Mesh, part?: Face | Vector3): void;
     remove(object: Mesh | OctreeObjectData): void;
     extend(octree: Octree): void;
     rebuild(): void;

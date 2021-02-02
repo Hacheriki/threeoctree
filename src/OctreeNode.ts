@@ -1,7 +1,7 @@
-import {OctreeObjectData} from './OctreeObjectData';
-import {OctreeNodeParameters, RemoveData} from './interfaces';
-import {Octree} from './Octree';
-import {Mesh, Vector3} from 'three';
+import { Mesh, Vector3 } from 'three';
+import { OctreeObjectData } from './OctreeObjectData';
+import { OctreeNodeParameters, RemoveData } from './interfaces';
+import { Octree } from './Octree';
 
 export class OctreeNode {
 

@@ -13,6 +13,10 @@ export default {
       file: 'dist/build.js',
       format: 'umd',
       name: 'THREE'
+    },
+    {
+      file: 'dist/build.module.js',
+      format: 'es'
     }
   ]
 };

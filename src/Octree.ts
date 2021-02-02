@@ -2,8 +2,7 @@ import {
     BoxBufferGeometry,
     BufferAttribute,
     BufferGeometry,
-    Face3,
-    Geometry,
+    Face,
     MathUtils,
     Mesh,
     MeshBasicMaterial,
@@ -11,11 +10,10 @@ import {
     Scene,
     Vector3
 } from 'three';
-import {OctreeNode} from './OctreeNode';
-import {indexOfPropertyWithValue, isNumber} from './utils';
-import {OctreeObjectData} from './OctreeObjectData';
-import {ObjectOptions, OctreeParameters, ResultData} from './interfaces';
-
+import { OctreeNode } from './OctreeNode';
+import { indexOfPropertyWithValue, isNumber } from './utils';
+import { OctreeObjectData } from './OctreeObjectData';
+import { ObjectOptions, OctreeParameters, ResultData } from './interfaces';
 
 export class Octree {
 
@@ -149,6 +147,10 @@ export class Octree {
             object = object.object;
         }
 
+        if (!(object.geometry instanceof BufferGeometry)) {
+            throw new Error('Unsupported geometry type: Use BufferGeometry!')
+        }
+
         // check uuid to avoid duplicates
         if (!object.uuid) {
             object.uuid = MathUtils.generateUUID();
@@ -181,46 +183,33 @@ export class Octree {
                         this.addObjectData(object, new Vector3().fromBufferAttribute(position, i));
                     }
 
-                } else if (object.geometry instanceof Geometry) {
-
-                    const vertices = object.geometry.vertices;
-                    for (let i = 0, l = vertices.length; i < l; i++) {
-                        this.addObjectData(object, vertices[i]);
-                    }
-
                 }
 
             } else if (useFaces === true) {
 
-                if (object.geometry instanceof BufferGeometry) {
+                const position = object.geometry.attributes.position;
+                const index = object.geometry.index;
 
-                    const position = object.geometry.attributes.position;
-                    const index = object.geometry.index;
+                // TODO: support face/vertex normals and colors?
 
-                    // TODO: support face/vertex normals and colors?
+                if (index) {
 
-                    if (index) {
-
-                        // indexed triangles
-                        for (let i = 0, l = index.count; i < l; i += 3) {
-                            this.addObjectData(object, new Face3(i, i + 1, i + 2));
-                        }
-
-                    } else {
-
-                        // every 3 vertices are one triangle
-                        for (let i = 0, l = position.count; i < l; i += 3) {
-                            this.addObjectData(object, new Face3(i, i + 1, i + 2));
-                        }
-
+                    // indexed triangles
+                    for (let i = 0, l = index.count; i < l; i += 3) {
+                        this.addObjectData(object, {
+                            a: i, b: i + 1, c: i + 2,
+                            normal: new Vector3(), materialIndex: 0
+                        });
                     }
 
-                } else if (object.geometry instanceof Geometry) {
+                } else {
 
-                    const faces = object.geometry.faces;
-
-                    for (let i = 0, l = faces.length; i < l; i++) {
-                        this.addObjectData(object, faces[i]);
+                    // every 3 vertices are one triangle
+                    for (let i = 0, l = position.count; i < l; i += 3) {
+                        this.addObjectData(object, {
+                            a: i, b: i + 1, c: i + 2,
+                            normal: new Vector3(), materialIndex: 0
+                        });
                     }
 
                 }
@@ -235,7 +224,7 @@ export class Octree {
 
     }
 
-    addObjectData(object: Mesh, part?: Face3 | Vector3) {
+    addObjectData(object: Mesh, part?: Face | Vector3) {
 
         const objectData = new OctreeObjectData(object, part);
 
