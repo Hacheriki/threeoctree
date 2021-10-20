@@ -1,15 +1,45 @@
 import { Face, Mesh, Scene, Vector3 } from 'three';
-import { OctreeNode } from './OctreeNode';
-import { Octree } from './Octree';
-import { OctreeObjectData } from './OctreeObjectData';
+import { Octree, OctreeNode, OctreeObjectData } from './internal';
+
+/**
+ * Optional parameters for initialization.
+ */
 
 export interface OctreeParameters {
-    tree?: Octree;
+
+    /**
+     * Pass scene only if you wish to visualize the octree.
+     */
+
     scene?: Scene;
+
+    /**
+     * Maximum octree depth.
+     * @default Infinity
+     */
+
     depthMax?: number;
+
+    /**
+     * @default 8
+     */
+
     objectsThreshold?: number;
+
+    /**
+     * This helps to sort objects that overlap nodes.
+     * @default 0.15
+     */
+
     overlapPct?: number;
+
+    /**
+     * Octree will defer insertion until you call `octree.update()`.
+     * @default false
+     */
+
     undeferred?: boolean;
+    tree?: Octree;
     root?: OctreeNode;
     INDEX_OUTSIDE_POS_X?: number;
     INDEX_OUTSIDE_NEG_X?: number;
@@ -26,8 +56,23 @@ export interface OctreeNodeParameters extends OctreeParameters {
     indexOctant?: number;
 }
 
+/**
+ * Options for adding a mesh to the octree.
+ * Note that only vertices OR faces can be used, and `useVertices` overrides `useFaces`.
+ */
+
 export interface ObjectOptions {
+
+    /**
+     * If true, add mesh's faces as octree objects.
+     */
+
     useFaces?: boolean;
+
+    /**
+     * If true, add mesh's vertices as octree objects.
+     */
+
     useVertices?: boolean;
 }
 

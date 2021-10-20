@@ -4,6 +4,8 @@
         "node": true,
         "es6": true
     },
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
     "parserOptions": {
         "sourceType": "module"
     },
@@ -53,7 +55,7 @@
         ],
         "indent": [
             "error",
-            "tab",
+            4,
             {
                 "SwitchCase": 1
             }
@@ -171,7 +173,8 @@
         ],
         "no-multi-spaces": 2,
         "no-undef": 1,
-        "no-unused-vars": 1,
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": 1,
         "no-extra-semi": 1,
         "lines-around-comment": [
             "error",

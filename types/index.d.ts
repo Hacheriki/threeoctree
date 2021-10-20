@@ -1,2 +1,1 @@
-import { Octree } from './Octree';
-export { Octree };
+export { Octree, OctreeRaycaster } from './internal';

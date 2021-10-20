@@ -1,8 +1,7 @@
 import { BoxBufferGeometry, Face, Mesh, MeshBasicMaterial, Object3D, Scene, Vector3 } from 'three';
-import { OctreeNode } from './OctreeNode';
-import { OctreeObjectData } from './OctreeObjectData';
-import { ObjectOptions, OctreeParameters, ResultData } from './interfaces';
+import { ObjectOptions, OctreeNode, OctreeObjectData, OctreeParameters, ResultData } from './internal';
 export declare class Octree {
+
     nodeCount: number;
     INDEX_INSIDE_CROSS: number;
     INDEX_OUTSIDE_OFFSET: number;
@@ -44,20 +43,61 @@ export declare class Octree {
     overlapPct: number;
     undeferred: boolean;
     root: OctreeNode;
-    constructor(parameters?: OctreeParameters);
+    constructor( parameters?: OctreeParameters );
+
+    /**
+     * When `octree.add( object )` is called and `octree.undeferred !== true`,
+     * insertion for that object is deferred until the octree is updated.
+     * Update octree to insert all deferred objects after render cycle to make sure object matrices are up to date.
+     */
+
     update(): void;
-    add(object: Mesh | OctreeObjectData, options?: ObjectOptions): void;
-    addDeferred(object: Mesh | OctreeObjectData, options?: ObjectOptions): void;
-    addObjectData(object: Mesh, part?: Face | Vector3): void;
-    remove(object: Mesh | OctreeObjectData): void;
-    extend(octree: Octree): void;
+
+    /**
+     * Add mesh as single octree object.
+     */
+
+    add( object: Mesh | OctreeObjectData, options?: ObjectOptions ): void;
+    addDeferred( object: Mesh | OctreeObjectData, options?: ObjectOptions ): void;
+    addObjectData( object: Mesh, part?: Face | Vector3 ): void;
+
+    /**
+     * Remove all octree objects associated with the mesh.
+     */
+
+    remove( object: Mesh | OctreeObjectData ): void;
+    extend( octree: Octree ): void;
+
+    /**
+     * Rebuild octree to account for moving objects within the tree.
+     */
+
     rebuild(): void;
-    updateObject(object: Object3D | OctreeObjectData): void;
-    search(position: Vector3, radius: number, organizeByObject?: boolean, direction?: Vector3): OctreeObjectData[] | ResultData[];
-    findClosestVertex(position: Vector3, radius: number): Vector3;
-    setRoot(root: OctreeNode): void;
+    updateObject( object: Object3D | OctreeObjectData ): void;
+
+    /**
+     * Search octree at a position in all directions for radius distance.
+     * @param position - Search position
+     * @param radius - Radius distance
+     * @param organizeByObject - Organize results by object (i.e. all faces/vertices belonging to mesh in one list vs a result for each vertex)
+     */
+
+    search( position: Vector3, radius: number, organizeByObject?: boolean ): OctreeObjectData[] | ResultData[];
+
+    /**
+     * Search octree using a ray.
+     * @param origin - Origin of ray
+     * @param far - Maximum distance
+     * @param organizeByObject - Organize results by object (i.e. all faces/vertices belonging to mesh in one list vs a result for each vertex)
+     * @param direction - Direction of ray
+     */
+
+    search( origin: Vector3, far: number, organizeByObject: boolean, direction: Vector3 ): OctreeObjectData[] | ResultData[];
+    findClosestVertex( position: Vector3, radius: number ): Vector3;
+    setRoot( root: OctreeNode ): void;
     getDepthEnd(): number;
     getNodeCountEnd(): number;
     getObjectCountEnd(): number;
     toConsole(): void;
+
 }

@@ -1,10 +1,12 @@
 export function isNumber( n ) {
-    return !isNaN( n ) && isFinite( n );
+
+    return ! isNaN( n ) && isFinite( n );
+
 }
 
 export function indexOfPropertyWithValue( array, property, value ) {
 
-    for ( let i = 0, il = array.length; i < il; i++ ) {
+    for ( let i = 0, il = array.length; i < il; i ++ ) {
 
         if ( array[ i ][ property ] === value ) {
 
@@ -14,6 +16,6 @@ export function indexOfPropertyWithValue( array, property, value ) {
 
     }
 
-    return -1;
+    return - 1;
 
 }

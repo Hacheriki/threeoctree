@@ -1,10 +1,9 @@
 import {
-    BufferAttribute,
     Face,
     Mesh,
     Vector3
 } from 'three';
-import { OctreeNode } from './OctreeNode';
+import { OctreeNode } from './internal';
 
 export class OctreeObjectData {
 
@@ -19,20 +18,23 @@ export class OctreeObjectData {
     positionLast: Vector3;
     indexOctant?: number;
 
-    constructor(object: Mesh, part?: Face | Vector3) {
+    constructor( object: Mesh, part?: Face | Vector3 ) {
 
         this.object = object;
 
         // handle part by type
 
-        if (part instanceof Vector3) {
+        if ( part instanceof Vector3 ) {
+
             this.vertices = part;
             this.useVertices = true;
-        } else if (part) {
+
+        } else if ( part ) {
+
             this.faces = part;
             this.useFaces = true;
-        }
 
+        }
 
         this.radius = 0;
         this.position = new Vector3();
@@ -47,62 +49,62 @@ export class OctreeObjectData {
 
     update() {
 
-        if (this.faces) {
+        if ( this.faces ) {
 
-            const {center, radius} = this.getFace3BoundingSphere(this.object, this.faces);
+            const { center, radius } = this.getFace3BoundingSphere( this.object, this.faces );
+
             this.radius = radius;
-            this.position.copy(center).applyMatrix4(this.object.matrixWorld);
+            this.position.copy( center ).applyMatrix4( this.object.matrixWorld );
 
-        } else if (this.vertices) {
+        } else if ( this.vertices ) {
 
-            if (!this.object.geometry.boundingSphere) {
+            if ( ! this.object.geometry.boundingSphere ) {
+
                 this.object.geometry.computeBoundingSphere();
+
             }
+
             this.radius = this.object.geometry.boundingSphere.radius;
-            this.position.copy(this.vertices).applyMatrix4(this.object.matrixWorld);
+            this.position.copy( this.vertices ).applyMatrix4( this.object.matrixWorld );
 
         } else {
 
-            if (!this.object.geometry.boundingSphere) {
+            if ( ! this.object.geometry.boundingSphere ) {
+
                 this.object.geometry.computeBoundingSphere();
+
             }
 
             this.radius = this.object.geometry.boundingSphere.radius;
-            this.position.copy(this.object.geometry.boundingSphere.center).applyMatrix4(this.object.matrixWorld);
+            this.position.copy( this.object.geometry.boundingSphere.center ).applyMatrix4( this.object.matrixWorld );
 
         }
 
-        this.radius = this.radius * Math.max(this.object.scale.x, this.object.scale.y, this.object.scale.z);
+        this.radius = this.radius * Math.max( this.object.scale.x, this.object.scale.y, this.object.scale.z );
 
     }
 
-    getFace3BoundingSphere(object: Mesh, face: Face): {center: Vector3, radius: number} {
+    getFace3BoundingSphere( object: Mesh, face: Face ): {center: Vector3, radius: number} {
 
         let va: Vector3;
         let vb: Vector3;
         let vc: Vector3;
 
-        const position = object.geometry.attributes.position as BufferAttribute;
+        const position = object.geometry.getAttribute( 'position' );
 
-        va = new Vector3().fromBufferAttribute(position, face.a);
-        vb = new Vector3().fromBufferAttribute(position, face.b);
-        vc = new Vector3().fromBufferAttribute(position, face.c);
-        // const indexA = face.a * position.itemSize;
-        // va = new Vector3(position.array[indexA], position.array[indexA + 1], position.array[indexA + 2]);
-        // const indexB = face.b * position.itemSize;
-        // vb = new Vector3(position.array[indexB], position.array[indexB + 1], position.array[indexB + 2]);
-        // const indexC = face.c * position.itemSize;
-        // va = new Vector3(position.array[indexC], position.array[indexC + 1], position.array[indexC + 2]);
+        va = new Vector3().fromBufferAttribute( position, face.a );
+        vb = new Vector3().fromBufferAttribute( position, face.b );
+        vc = new Vector3().fromBufferAttribute( position, face.c );
 
         const utilVec3 = new Vector3();
-        const center = new Vector3().addVectors(va, vb).add(vc).divideScalar(3);
-        const radius =  Math.max(
-            utilVec3.subVectors(center, va).length(),
-            utilVec3.subVectors(center, vb).length(),
-            utilVec3.subVectors(center, vc).length()
+        const center = new Vector3().addVectors( va, vb ).add( vc ).divideScalar( 3 );
+        const radius = Math.max(
+            utilVec3.subVectors( center, va ).length(),
+            utilVec3.subVectors( center, vb ).length(),
+            utilVec3.subVectors( center, vc ).length()
         );
 
-        return {center, radius};
+        return { center, radius };
 
     }
 

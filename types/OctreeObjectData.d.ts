@@ -1,6 +1,7 @@
 import { Face, Mesh, Vector3 } from 'three';
-import { OctreeNode } from './OctreeNode';
+import { OctreeNode } from './internal';
 export declare class OctreeObjectData {
+
     node: OctreeNode;
     object: Mesh;
     faces: Face;
@@ -11,10 +12,11 @@ export declare class OctreeObjectData {
     position: Vector3;
     positionLast: Vector3;
     indexOctant?: number;
-    constructor(object: Mesh, part?: Face | Vector3);
+    constructor( object: Mesh, part?: Face | Vector3 );
     update(): void;
-    getFace3BoundingSphere(object: Mesh, face: Face): {
+    getFace3BoundingSphere( object: Mesh, face: Face ): {
         center: Vector3;
         radius: number;
     };
+
 }
