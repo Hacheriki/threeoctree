@@ -38,7 +38,7 @@ Only `BufferGeometry` is supported.
 ## Usage
 
 Download the [latest script](https://github.com/Brakebein/threeoctree/tree/master/build)
-and include it in your html after three.js.
+and include it in your html after three.js:
 
 ```html
 <script src="js/three.min.js"></script>
@@ -72,7 +72,7 @@ const octree = new THREE.Octree({
 });
 ```
 
-#### Add/Remove Objects
+### Add/Remove Objects
 
 Add mesh as single octree object:  
   
@@ -145,7 +145,7 @@ In most cases you will use only the former:
   
 ```javascript
 const octreeResults = octree.search( raycaster.ray.origin, raycaster.ray.far, true, raycaster.ray.direction );
-const intersections = rayCaster.intersectOctreeObjects( octreeResults );
+const intersections = raycaster.intersectOctreeObjects( octreeResults );
 ```
 
 If you wish to get an intersection from a user's mouse click, this is easy enough:
