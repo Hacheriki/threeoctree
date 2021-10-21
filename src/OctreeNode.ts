@@ -1053,7 +1053,7 @@ export class OctreeNode {
 
     search( position: Vector3, radius: number, objects: OctreeObjectData[], direction: Vector3, directionPct?: Vector3 ): OctreeObjectData[] {
 
-        let intersects = false;
+        let intersects;
 
         // test intersects by parameters
 

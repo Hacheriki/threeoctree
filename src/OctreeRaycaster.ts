@@ -32,7 +32,6 @@ export class OctreeRaycaster extends Raycaster {
         } else if ( object.object instanceof Mesh ) {
 
             const mesh = object.object;
-            const indexBuffer = mesh.geometry.index;
             const attr = mesh.geometry.getAttribute( 'position' );
 
             if ( Array.isArray( object.faces ) && object.faces.length > 0 ) {

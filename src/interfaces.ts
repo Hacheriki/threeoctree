@@ -14,19 +14,21 @@ export interface OctreeParameters {
     scene?: Scene;
 
     /**
-     * Maximum octree depth.
+     * Maximum depth of tree.
      * @default Infinity
      */
 
     depthMax?: number;
 
     /**
+     * Max number of objects before nodes split or merge.
      * @default 8
      */
 
     objectsThreshold?: number;
 
     /**
+     * Percent between 0 and 1 that nodes will overlap each other.
      * This helps to sort objects that overlap nodes.
      * @default 0.15
      */
@@ -34,7 +36,8 @@ export interface OctreeParameters {
     overlapPct?: number;
 
     /**
-     * Octree will defer insertion until you call `octree.update()`.
+     * If true, objects are inserted immediately instead of being deferred until next `octree.update()` call.
+     * This may decrease performance as it forces a matrix update.
      * @default false
      */
 
