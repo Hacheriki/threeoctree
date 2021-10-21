@@ -1,5 +1,6 @@
 import typescript from '@rollup/plugin-typescript';
 import nodeResolve from '@rollup/plugin-node-resolve';
+import { terser } from 'rollup-plugin-terser';
 
 export default {
   external: ['three'],
@@ -10,7 +11,11 @@ export default {
   ],
   output: [
     {
-      file: 'dist/build.js',
+      file: 'build/threeoctree.module.js',
+      format: 'es'
+    },
+    {
+      file: 'build/threeoctree.js',
       format: 'umd',
       name: 'THREE',
       extend: true,
@@ -19,8 +24,16 @@ export default {
       }
     },
     {
-      file: 'dist/build.module.js',
-      format: 'es'
+      file: 'build/threeoctree.min.js',
+      format: 'umd',
+      name: 'THREE',
+      plugins: [
+        terser()
+      ],
+      extend: true,
+      globals: {
+        three: 'THREE'
+      }
     }
   ]
 };
