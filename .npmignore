@@ -1,7 +1,6 @@
-/examples
+/docs
 /src
 /.eslintrc.json
-/threeoctree.js
-/threeoctree.min.js
+/rollup.config.js
 /tsconfig.json
 /tslint.json
