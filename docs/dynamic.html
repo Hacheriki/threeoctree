@@ -17,7 +17,7 @@
 
     <script src="https://unpkg.com/stats.js@0.17.0/build/stats.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/three@0.133.0/build/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script type="text/javascript" src="../dist/build.js"></script>
+    <script type="text/javascript" src="./lib/threeoctree.min.js"></script>
     
     <script>
         const meshes = [],
@@ -42,7 +42,7 @@
         const renderer = new THREE.WebGLRenderer();
 
         renderer.setSize( window.innerWidth, window.innerHeight );
-        renderer.setClearColor( 0xffffff );
+        renderer.setClearColor( 0xf0f0f0 );
 
         document.body.appendChild( renderer.domElement );
         
@@ -94,7 +94,7 @@
         info.style.textAlign = 'center';
         info.style.padding = '10px';
         info.style.background = '#FFFFFF';
-        info.innerHTML = '<a href="https://threejs.org" target="_blank">three.js</a> webgl - octree (sparse & dynamic) - by <a href="https://github.com/collinhover/threeoctree" target="_blank">collinhover</a> (revised by <a href="https://github.com/Brakebein/threeoctree" target="_blank">Brakebein</a>)';
+        info.innerHTML = '<a href="https://threejs.org" target="_blank">three.js</a> webgl - octree (sparse & dynamic) - by <a href="https://github.com/collinhover/threeoctree" target="_blank">collinhover</a> (revised by <a href="https://github.com/Brakebein/threeoctree" target="_blank">Brakebein</a>) - <a href="https://github.com/Brakebein/threeoctree/blob/master/docs/dynamic.html" target="_blank">view code</a>';
         document.body.appendChild( info );
 
         // stats

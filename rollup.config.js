@@ -34,6 +34,18 @@ export default {
       globals: {
         three: 'THREE'
       }
+    },
+    {
+      file: 'docs/lib/threeoctree.min.js',
+      format: 'umd',
+      name: 'THREE',
+      plugins: [
+        terser()
+      ],
+      extend: true,
+      globals: {
+        three: 'THREE'
+      }
     }
   ]
 };
