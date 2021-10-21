@@ -5,7 +5,10 @@
         "es6": true
     },
     "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint"],
+    "plugins": ["@typescript-eslint", "html"],
+    "settings": {
+        "html/indent": "+4"
+    },
     "parserOptions": {
         "sourceType": "module"
     },

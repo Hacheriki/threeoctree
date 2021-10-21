@@ -12,7 +12,11 @@ export default {
     {
       file: 'dist/build.js',
       format: 'umd',
-      name: 'THREE'
+      name: 'THREE',
+      extend: true,
+      globals: {
+        three: 'THREE'
+      }
     },
     {
       file: 'dist/build.module.js',
