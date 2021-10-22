@@ -34,6 +34,7 @@ Only `BufferGeometry` is supported.
 ### Needs
 
 * reworking / optimization of insert and removal ( currently we have to force a transform update in case the object is added before first three update )
+* `OctreeRaycaster`: consider backface culling with respect to `material.side` ( `FrontSide | BackSide | DoubleSide` )
 
 ## Usage
 
@@ -171,4 +172,25 @@ function onClick ( event ) {
     // ...
     
 }
+```
+
+### TypeScript usage
+
+Make use of generics in TypeScript: 
+
+```typescript
+import { BoxGeometry, MeshBasicMaterial } from 'three';
+import { Octree } from 'threeoctree';
+
+const octree = new Octree<Mesh<BoxGeometry, MeshBasicMaterial>>();
+
+const mesh = new Mesh( new BoxGeometry(), new MeshBasicMaterial() );
+
+octree.add( mesh );
+
+// ...
+
+const octreeResults = octree.search( position, radius, true );
+
+octreeResults[0].object // -> Mesh<BoxGeometry, MeshBasicMaterial>
 ```
