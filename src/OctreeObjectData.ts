@@ -5,10 +5,10 @@ import {
 } from 'three';
 import { OctreeNode } from './internal';
 
-export class OctreeObjectData {
+export class OctreeObjectData<T extends Mesh = Mesh> {
 
-    node: OctreeNode;
-    object: Mesh;
+    node: OctreeNode<T>;
+    object: T;
     faces: Face;
     vertices: Vector3;
     useFaces = false;
@@ -18,7 +18,7 @@ export class OctreeObjectData {
     positionLast: Vector3;
     indexOctant?: number;
 
-    constructor( object: Mesh, part?: Face | Vector3 ) {
+    constructor( object: T, part?: Face | Vector3 ) {
 
         this.object = object;
 
@@ -84,7 +84,7 @@ export class OctreeObjectData {
 
     }
 
-    getFace3BoundingSphere( object: Mesh, face: Face ): {center: Vector3, radius: number} {
+    getFace3BoundingSphere( object: T, face: Face ): { center: Vector3, radius: number } {
 
         let va: Vector3;
         let vb: Vector3;

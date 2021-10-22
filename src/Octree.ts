@@ -1,5 +1,5 @@
 import {
-    BoxBufferGeometry,
+    BoxGeometry,
     BufferAttribute,
     BufferGeometry,
     Face,
@@ -20,7 +20,7 @@ import {
     ResultData
 } from './internal';
 
-export class Octree {
+export class Octree<T extends Mesh = Mesh> {
 
     // static properties ( modification is not recommended )
 
@@ -51,22 +51,22 @@ export class Octree {
     // properties
 
     scene: Scene;
-    visualGeometry: BoxBufferGeometry;
+    visualGeometry: BoxGeometry;
     visualMaterial: MeshBasicMaterial;
 
-    objects: Mesh[] = [];
-    objectsMap: {[key: string]: Mesh} = {};
-    objectsData: OctreeObjectData[] = [];
-    objectsDeferred: {object: Mesh | OctreeObjectData, options: ObjectOptions}[] = [];
+    objects: T[] = [];
+    objectsMap: {[key: string]: T} = {};
+    objectsData: OctreeObjectData<T>[] = [];
+    objectsDeferred: {object: T | OctreeObjectData<T>, options: ObjectOptions}[] = [];
 
     depthMax: number;
     objectsThreshold: number;
     overlapPct: number;
     undeferred = false;
 
-    root: OctreeNode;
+    root: OctreeNode<T>;
 
-    constructor( parameters: OctreeParameters = {} ) {
+    constructor( parameters: OctreeParameters<T> = {} ) {
 
         parameters.tree = this;
 
@@ -97,7 +97,7 @@ export class Octree {
 
         if ( this.scene ) {
 
-            this.visualGeometry = new BoxBufferGeometry( 1, 1, 1 );
+            this.visualGeometry = new BoxGeometry( 1, 1, 1 );
             this.visualMaterial = new MeshBasicMaterial( {
                 color: 0xff0066,
                 wireframe: true,
@@ -147,7 +147,7 @@ export class Octree {
      * Add mesh as single octree object.
      */
 
-    add( object: Mesh | OctreeObjectData, options?: ObjectOptions ) {
+    add( object: T | OctreeObjectData<T>, options?: ObjectOptions ) {
 
         if ( this.undeferred ) {
 
@@ -166,7 +166,7 @@ export class Octree {
 
     }
 
-    addDeferred( object: Mesh | OctreeObjectData, options?: ObjectOptions ) {
+    addDeferred( object: T | OctreeObjectData<T>, options?: ObjectOptions ) {
 
         // ensure object is not object data
 
@@ -271,7 +271,7 @@ export class Octree {
 
     }
 
-    addObjectData( object: Mesh, part?: Face | Vector3 ) {
+    addObjectData( object: T, part?: Face | Vector3 ) {
 
         const objectData = new OctreeObjectData( object, part );
 
@@ -289,7 +289,7 @@ export class Octree {
      * Remove all octree objects associated with the mesh.
      */
 
-    remove( object: Mesh | OctreeObjectData ) {
+    remove( object: T | OctreeObjectData<T> ) {
 
         // ensure object is not object data for index search
 
@@ -350,7 +350,7 @@ export class Octree {
 
     }
 
-    extend( octree: Octree ) {
+    extend( octree: Octree<T> ) {
 
         if ( octree instanceof Octree ) {
 
@@ -376,7 +376,7 @@ export class Octree {
 
     rebuild() {
 
-        const objectsUpdate: OctreeObjectData[] = [];
+        const objectsUpdate: OctreeObjectData<T>[] = [];
 
         // check all object data for changes in position
         // assumes all object matrices are up to date
@@ -431,7 +431,7 @@ export class Octree {
 
     }
 
-    updateObject( object: Object3D | OctreeObjectData ) {
+    updateObject( object: T | OctreeObjectData<T> ) {
 
         if ( object instanceof OctreeObjectData ) {
 
@@ -441,7 +441,7 @@ export class Octree {
 
         // search all parents between object and root for world matrix update
 
-        const parentCascade = [ object ];
+        const parentCascade: Object3D[] = [ object ];
         let parent = object.parent;
         let parentUpdate: Object3D;
 
@@ -479,9 +479,20 @@ export class Octree {
      * @param position - Search position
      * @param radius - Radius distance
      * @param organizeByObject - Organize results by object (i.e. all faces/vertices belonging to mesh in one list vs a result for each vertex)
+     * @return List of octree object data
      */
 
-    search( position: Vector3, radius: number, organizeByObject?: boolean ): OctreeObjectData[] | ResultData[];
+    search( position: Vector3, radius: number, organizeByObject?: false ): OctreeObjectData<T>[];
+
+    /**
+     * Search octree at a position in all directions for radius distance.
+     * @param position - Search position
+     * @param radius - Radius distance
+     * @param organizeByObject - Organize results by object (i.e. all faces/vertices belonging to mesh in one list vs a result for each vertex)
+     * @return Search results organized by object
+     */
+
+    search( position: Vector3, radius: number, organizeByObject: true ): ResultData<T>[];
 
     /**
      * Search octree using a ray.
@@ -489,16 +500,29 @@ export class Octree {
      * @param far - Maximum distance
      * @param organizeByObject - Organize results by object (i.e. all faces/vertices belonging to mesh in one list vs a result for each vertex)
      * @param direction - Direction of ray
+     * @return List of octree object data
      */
 
-    search( origin: Vector3, far: number, organizeByObject: boolean, direction: Vector3 ): OctreeObjectData[] | ResultData[];
-    search( position: Vector3, radius: number, organizeByObject?: boolean, direction?: Vector3 ): OctreeObjectData[] | ResultData[] {
+    search( origin: Vector3, far: number, organizeByObject: false, direction: Vector3 ): OctreeObjectData<T>[];
+
+    /**
+     * Search octree using a ray.
+     * @param origin - Origin of ray
+     * @param far - Maximum distance
+     * @param organizeByObject - Organize results by object (i.e. all faces/vertices belonging to mesh in one list vs a result for each vertex)
+     * @param direction - Direction of ray
+     * @return Search results organized by object
+     */
+
+    search( origin: Vector3, far: number, organizeByObject: true, direction: Vector3 ): ResultData<T>[];
+
+    search( position: Vector3, radius: number, organizeByObject?: boolean, direction?: Vector3 ): OctreeObjectData<T>[] | ResultData<T>[] {
 
         let directionPct: Vector3;
 
         // add root objects
 
-        let objects: OctreeObjectData[] = [].concat( this.root.objects );
+        let objects: OctreeObjectData<T>[] = [].concat( this.root.objects );
 
         // ensure radius (i.e. distance of ray) is a number
 
@@ -531,9 +555,9 @@ export class Octree {
 
         if ( organizeByObject === true ) {
 
-            const results: ResultData[] = [];
+            const results: ResultData<T>[] = [];
             const resultsObjectsIndices = [];
-            let resultData: ResultData;
+            let resultData: ResultData<T>;
 
             // for each object data found
 
@@ -589,7 +613,7 @@ export class Octree {
 
     findClosestVertex( position: Vector3, radius: number ): Vector3 {
 
-        const search = this.search( position, radius, true ) as ResultData[];
+        const search = this.search( position, radius, true );
 
         if ( ! search[ 0 ] ) {
 
@@ -637,7 +661,7 @@ export class Octree {
 
     }
 
-    setRoot( root: OctreeNode ) {
+    setRoot( root: OctreeNode<T> ) {
 
         if ( root instanceof OctreeNode ) {
 

@@ -1,4 +1,4 @@
-import { Vector3, Mesh, BoxBufferGeometry, MeshBasicMaterial, BufferGeometry, MathUtils, BufferAttribute, Raycaster, Object3D } from 'three';
+import { Vector3, Mesh, BoxGeometry, MeshBasicMaterial, BufferGeometry, MathUtils, BufferAttribute, Raycaster, Object3D } from 'three';
 
 function isNumber(n) {
     return !isNaN(n) && isFinite(n);
@@ -645,14 +645,10 @@ class OctreeNode {
         return indexOctant;
     }
     search(position, radius, objects, direction, directionPct) {
-        let intersects;
         // test intersects by parameters
-        if (direction) {
-            intersects = this.intersectRay(position, direction, radius, directionPct);
-        }
-        else {
-            intersects = this.intersectSphere(position, radius);
-        }
+        const intersects = direction
+            ? this.intersectRay(position, direction, radius, directionPct)
+            : this.intersectSphere(position, radius);
         // if intersects
         if (intersects === true) {
             // gather objects
@@ -806,7 +802,7 @@ class Octree {
         // pass scene to see octree structure
         this.scene = parameters.scene;
         if (this.scene) {
-            this.visualGeometry = new BoxBufferGeometry(1, 1, 1);
+            this.visualGeometry = new BoxGeometry(1, 1, 1);
             this.visualMaterial = new MeshBasicMaterial({
                 color: 0xff0066,
                 wireframe: true,
@@ -1141,7 +1137,7 @@ class OctreeRaycaster extends Raycaster {
     intersectOctreeObject(object, recursive = true, intersects = []) {
         if (object instanceof Object3D) {
             // intersect normal object
-            this.intersectObject(object, recursive);
+            intersects.push(...this.intersectObject(object, recursive));
         }
         else if (object.object instanceof Mesh) {
             const mesh = object.object;

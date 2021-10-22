@@ -1,10 +1,10 @@
-import { Mesh, Vector3 } from 'three';
+import { BoxGeometry, Mesh, MeshBasicMaterial, Vector3 } from 'three';
 import { Octree, OctreeNodeParameters, OctreeObjectData, RemoveData } from './internal';
 
-export class OctreeNode {
+export class OctreeNode<T extends Mesh = Mesh> {
 
-    tree: Octree;
-    parent: OctreeNode;
+    tree: Octree<T>;
+    parent: OctreeNode<T>;
     id: number;
 
     position: Vector3;
@@ -14,9 +14,9 @@ export class OctreeNode {
     overlap: number;
     radiusOverlap: number;
 
-    objects: OctreeObjectData[] = [];
+    objects: OctreeObjectData<T>[] = [];
     nodesIndices: number[] = [];
-    nodesByIndex: {[key: number]: OctreeNode} = {};
+    nodesByIndex: {[key: number]: OctreeNode<T>} = {};
 
     left: number;
     right: number;
@@ -25,9 +25,9 @@ export class OctreeNode {
     back: number;
     front: number;
 
-    visual: Mesh;
+    visual: Mesh<BoxGeometry, MeshBasicMaterial>;
 
-    constructor( parameters: OctreeNodeParameters = {} ) {
+    constructor( parameters: OctreeNodeParameters<T> = {} ) {
 
         // store or create tree
 
@@ -38,7 +38,7 @@ export class OctreeNode {
         } else if ( ! ( parameters.parent instanceof OctreeNode ) ) {
 
             parameters.root = this;
-            this.tree = new Octree( parameters );
+            this.tree = new Octree<T>( parameters );
 
         }
 
@@ -79,7 +79,7 @@ export class OctreeNode {
 
     }
 
-    setParent( parent: OctreeNode ) {
+    setParent( parent: OctreeNode<T> ) {
 
         // store new parent
 
@@ -155,7 +155,7 @@ export class OctreeNode {
 
     }
 
-    addNode( node: OctreeNode, indexOctant: number ) {
+    addNode( node: OctreeNode<T>, indexOctant: number ) {
 
         node.indexOctant = indexOctant;
 
@@ -193,7 +193,7 @@ export class OctreeNode {
 
     }
 
-    addObject( object: OctreeObjectData ) {
+    addObject( object: OctreeObjectData<T> ) {
 
         // get object octant index
 
@@ -237,7 +237,7 @@ export class OctreeNode {
 
     }
 
-    addObjectWithoutCheck( objects: OctreeObjectData[] ) {
+    addObjectWithoutCheck( objects: OctreeObjectData<T>[] ) {
 
         for ( let i = 0, l = objects.length; i < l; i ++ ) {
 
@@ -250,7 +250,7 @@ export class OctreeNode {
 
     }
 
-    removeObject( object: Mesh | OctreeObjectData ): OctreeObjectData[] {
+    removeObject( object: T | OctreeObjectData<T> ): OctreeObjectData<T>[] {
 
         // cascade through tree to find and remove object
 
@@ -276,7 +276,7 @@ export class OctreeNode {
 
     }
 
-    removeObjectRecursive( object: Mesh | OctreeObjectData, removeData: RemoveData ): RemoveData {
+    removeObjectRecursive( object: T | OctreeObjectData<T>, removeData: RemoveData<T> ): RemoveData<T> {
 
         let objectRemoved = false;
 
@@ -376,11 +376,11 @@ export class OctreeNode {
 
     grow() {
 
-        const objectsExpand: OctreeObjectData[] = [];
+        const objectsExpand: OctreeObjectData<T>[] = [];
         const objectsExpandOctants: number[] = [];
-        const objectsSplit: OctreeObjectData[] = [];
+        const objectsSplit: OctreeObjectData<T>[] = [];
         const objectsSplitOctants: number[] = [];
-        let objectsRemaining: OctreeObjectData[] = [];
+        let objectsRemaining: OctreeObjectData<T>[] = [];
 
         // for each object
 
@@ -442,9 +442,9 @@ export class OctreeNode {
 
     }
 
-    split( objects: OctreeObjectData[], octants: number[] ): OctreeObjectData[] {
+    split( objects: OctreeObjectData<T>[], octants: number[] ): OctreeObjectData<T>[] {
 
-        let objectsRemaining: OctreeObjectData[];
+        let objectsRemaining: OctreeObjectData<T>[];
 
         // if not at max depth
 
@@ -499,7 +499,7 @@ export class OctreeNode {
 
     }
 
-    branch( indexOctant: number ): OctreeNode {
+    branch( indexOctant: number ): OctreeNode<T> {
 
         // node exists
 
@@ -522,7 +522,7 @@ export class OctreeNode {
 
             // node
 
-            const node = new OctreeNode( {
+            const node = new OctreeNode<T>( {
                 tree: this.tree,
                 parent: this,
                 position,
@@ -540,10 +540,10 @@ export class OctreeNode {
 
     }
 
-    expand( objects: OctreeObjectData[], octants: number[] ): OctreeObjectData[] {
+    expand( objects: OctreeObjectData<T>[], octants: number[] ): OctreeObjectData<T>[] {
 
         const iom = this.tree.INDEX_OUTSIDE_MAP;
-        let objectsRemaining;
+        let objectsRemaining: OctreeObjectData<T>[];
 
         // handle max depth down tree
 
@@ -553,7 +553,7 @@ export class OctreeNode {
             octants = octants || [];
 
             objectsRemaining = [];
-            const objectsExpand = [];
+            const objectsExpand: OctreeObjectData<T>[] = [];
 
             // reset counts
 
@@ -762,7 +762,7 @@ export class OctreeNode {
 
     checkMerge() {
 
-        let nodeParent: OctreeNode = this;
+        let nodeParent: OctreeNode<T> = this;
         let nodeMerge;
 
         // traverse up tree as long as node + entire subtree's object count is under minimum
@@ -784,7 +784,7 @@ export class OctreeNode {
 
     }
 
-    merge( nodes?: OctreeNode | OctreeNode[] ) {
+    merge( nodes?: OctreeNode<T> | OctreeNode<T>[] ) {
 
         // handle nodes
 
@@ -820,7 +820,7 @@ export class OctreeNode {
 
         if ( this.nodesIndices.length > 0 ) {
 
-            let nodeHeaviest;
+            let nodeHeaviest: OctreeNode<T>;
             let nodeHeaviestObjectsCount = 0;
             let outsideHeaviestObjectsCount = this.objects.length;
 
@@ -857,7 +857,7 @@ export class OctreeNode {
 
     }
 
-    contract( nodeRoot: OctreeNode ) {
+    contract( nodeRoot: OctreeNode<T> ) {
 
         // handle all nodes
 
@@ -899,10 +899,10 @@ export class OctreeNode {
 
     }
 
-    getOctantIndex( objectData: OctreeNode | OctreeObjectData ): number {
+    getOctantIndex( objectData: OctreeNode<T> | OctreeObjectData<T> ): number {
 
-        let radiusObj;
-        let positionObj;
+        let radiusObj: number;
+        let positionObj: Vector3;
 
         // handle type
 
@@ -1051,21 +1051,13 @@ export class OctreeNode {
 
     }
 
-    search( position: Vector3, radius: number, objects: OctreeObjectData[], direction: Vector3, directionPct?: Vector3 ): OctreeObjectData[] {
-
-        let intersects;
+    search( position: Vector3, radius: number, objects: OctreeObjectData<T>[], direction: Vector3, directionPct?: Vector3 ): OctreeObjectData<T>[] {
 
         // test intersects by parameters
 
-        if ( direction ) {
-
-            intersects = this.intersectRay( position, direction, radius, directionPct );
-
-        } else {
-
-            intersects = this.intersectSphere( position, radius );
-
-        }
+        const intersects = direction
+            ? this.intersectRay( position, direction, radius, directionPct )
+            : this.intersectSphere( position, radius );
 
         // if intersects
 
@@ -1206,7 +1198,7 @@ export class OctreeNode {
 
     }
 
-    getObjectsEnd( objects?: OctreeObjectData[] ): OctreeObjectData[] {
+    getObjectsEnd( objects?: OctreeObjectData<T>[] ): OctreeObjectData<T>[] {
 
         objects = ( objects || [] ).concat( this.objects );
 

@@ -649,14 +649,10 @@
             return indexOctant;
         }
         search(position, radius, objects, direction, directionPct) {
-            let intersects;
             // test intersects by parameters
-            if (direction) {
-                intersects = this.intersectRay(position, direction, radius, directionPct);
-            }
-            else {
-                intersects = this.intersectSphere(position, radius);
-            }
+            const intersects = direction
+                ? this.intersectRay(position, direction, radius, directionPct)
+                : this.intersectSphere(position, radius);
             // if intersects
             if (intersects === true) {
                 // gather objects
@@ -810,7 +806,7 @@
             // pass scene to see octree structure
             this.scene = parameters.scene;
             if (this.scene) {
-                this.visualGeometry = new three.BoxBufferGeometry(1, 1, 1);
+                this.visualGeometry = new three.BoxGeometry(1, 1, 1);
                 this.visualMaterial = new three.MeshBasicMaterial({
                     color: 0xff0066,
                     wireframe: true,
@@ -1145,7 +1141,7 @@
         intersectOctreeObject(object, recursive = true, intersects = []) {
             if (object instanceof three.Object3D) {
                 // intersect normal object
-                this.intersectObject(object, recursive);
+                intersects.push(...this.intersectObject(object, recursive));
             }
             else if (object.object instanceof three.Mesh) {
                 const mesh = object.object;

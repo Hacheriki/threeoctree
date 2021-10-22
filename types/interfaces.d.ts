@@ -5,27 +5,27 @@ import { Octree, OctreeNode, OctreeObjectData } from './internal';
  * Optional parameters for initialization.
  */
 
-export interface OctreeParameters {
+export interface OctreeParameters<T extends Mesh = Mesh> {
 
     /**
      * Pass scene only if you wish to visualize the octree.
      */
 
-    scene?: Scene;
+    scene?: Scene | undefined;
 
     /**
      * Maximum depth of tree.
      * @default Infinity
      */
 
-    depthMax?: number;
+    depthMax?: number | undefined;
 
     /**
      * Max number of objects before nodes split or merge.
      * @default 8
      */
 
-    objectsThreshold?: number;
+    objectsThreshold?: number | undefined;
 
     /**
      * Percent between 0 and 1 that nodes will overlap each other.
@@ -33,7 +33,7 @@ export interface OctreeParameters {
      * @default 0.15
      */
 
-    overlapPct?: number;
+    overlapPct?: number | undefined;
 
     /**
      * If true, objects are inserted immediately instead of being deferred until next `octree.update()` call.
@@ -41,21 +41,21 @@ export interface OctreeParameters {
      * @default false
      */
 
-    undeferred?: boolean;
-    tree?: Octree;
-    root?: OctreeNode;
-    INDEX_OUTSIDE_POS_X?: number;
-    INDEX_OUTSIDE_NEG_X?: number;
-    INDEX_OUTSIDE_POS_Y?: number;
-    INDEX_OUTSIDE_NEG_Y?: number;
-    INDEX_OUTSIDE_POS_Z?: number;
-    INDEX_OUTSIDE_NEG_Z?: number;
+    undeferred?: boolean | undefined;
+    tree?: Octree<T> | undefined;
+    root?: OctreeNode<T> | undefined;
+    INDEX_OUTSIDE_POS_X?: number | undefined;
+    INDEX_OUTSIDE_NEG_X?: number | undefined;
+    INDEX_OUTSIDE_POS_Y?: number | undefined;
+    INDEX_OUTSIDE_NEG_Y?: number | undefined;
+    INDEX_OUTSIDE_POS_Z?: number | undefined;
+    INDEX_OUTSIDE_NEG_Z?: number | undefined;
 }
-export interface OctreeNodeParameters extends OctreeParameters {
-    parent?: OctreeNode;
-    position?: Vector3;
-    radius?: number;
-    indexOctant?: number;
+export interface OctreeNodeParameters<T extends Mesh> extends OctreeParameters<T> {
+    parent?: OctreeNode<T> | undefined;
+    position?: Vector3 | undefined;
+    radius?: number | undefined;
+    indexOctant?: number | undefined;
 }
 
 /**
@@ -69,13 +69,13 @@ export interface ObjectOptions {
      * If true, add mesh's faces as octree objects.
      */
 
-    useFaces?: boolean;
+    useFaces?: boolean | undefined;
 
     /**
      * If true, add mesh's vertices as octree objects.
      */
 
-    useVertices?: boolean;
+    useVertices?: boolean | undefined;
 }
 export interface GenericObject {
     id: string | number;
@@ -85,13 +85,13 @@ export interface GenericObject {
     y: number;
     z: number;
 }
-export interface ResultData {
-    object: Mesh;
+export interface ResultData<T extends Mesh = Mesh> {
+    object: T;
     faces: Face[];
     vertices: Vector3[];
 }
-export interface RemoveData {
+export interface RemoveData<T extends Mesh> {
     searchComplete: boolean;
-    nodesRemovedFrom: OctreeNode[];
-    objectsDataRemoved: OctreeObjectData[];
+    nodesRemovedFrom: OctreeNode<T>[];
+    objectsDataRemoved: OctreeObjectData<T>[];
 }
