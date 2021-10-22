@@ -11,10 +11,13 @@ See [demo examples](https://brakebein.github.io/threeoctree)
 The original library has been implemented by [Collin Hover](https://github.com/collinhover/threeoctree)
 based on Dynamic Octree by [Piko3D](http://www.piko3d.com/) and Octree by [Marek Pawlowski](pawlowski.it).
 
-Since the original repo hasn't been updated for years, the aim of this repo is to bring it up-to-date with the latest three.js release (r133).
-It also adds type declarations.
-However, it also drops support for `Geometry`, since it has been removed from three.js core.
-Only `BufferGeometry` is supported.
+However, the original code hasn't been updated for years and has also been [removed from the three.js repo (r100)](https://github.com/mrdoob/three.js/issues/15387#issuecomment-445273451).
+There seems to be [new Octree class](https://github.com/mrdoob/three.js/blob/db7851f4c58cccea0379667af39ac000acf1ae59/examples/jsm/math/Octree.js), which is however not sparse and dynamic and serves only for simple hit tests.
+
+Hence, the aim of this repo is to bring it up-to-date with the latest three.js release (r133).
+Support for `Geometry` was dropped, since it is deprecated and has been [removed from three.js core (r125)](https://github.com/mrdoob/three.js/wiki/Migration-Guide#r124--r125).
+Instead, Octree has been updated to only support `BufferGeometry`.
+Additionally, it adds type declarations.
   
 ## Features
 
