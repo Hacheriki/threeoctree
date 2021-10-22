@@ -1,5 +1,5 @@
 {
-  "name": "threeoctree",
+  "name": "@brakebein/threeoctree",
   "version": "2.0.0",
   "description": "(sparse + dynamic) 3D spatial representation structure for fast searches in three.js",
   "repository": {

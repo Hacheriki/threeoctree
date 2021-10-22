@@ -55,11 +55,11 @@ and include it in your html after three.js:
 Usage with npm and ES modules:
 
 ```
-npm install threeoctree
+npm install @brakebein/threeoctree
 ```
 
 ```javascript
-import { Octree } from 'threeoctree';
+import { Octree } from '@brakebein/threeoctree';
 
 const octree = new Octree();
 ```
@@ -183,7 +183,7 @@ Make use of generics in TypeScript:
 
 ```typescript
 import { BoxGeometry, MeshBasicMaterial } from 'three';
-import { Octree } from 'threeoctree';
+import { Octree } from '@brakebein/threeoctree';
 
 const octree = new Octree<Mesh<BoxGeometry, MeshBasicMaterial>>();
 
