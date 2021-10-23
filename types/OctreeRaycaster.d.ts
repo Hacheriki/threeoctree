@@ -1,4 +1,4 @@
-import { Intersection, Mesh, Object3D, Raycaster } from 'three';
+import { Intersection, Object3D, Raycaster } from 'three';
 import { OctreeObjectData, ResultData } from './internal';
 
 /**
@@ -15,7 +15,7 @@ export declare class OctreeRaycaster extends Raycaster {
    * @param intersects - (optional) target to set the result. Otherwise a new Array is instantiated.
    */
 
-    intersectOctreeObject<T extends Mesh>( object: OctreeObjectData | ResultData | Object3D, recursive?: boolean, intersects?: Intersection<T>[] ): Intersection<T>[];
+    intersectOctreeObject( object: OctreeObjectData | ResultData | Object3D, recursive?: boolean, intersects?: Intersection[] ): Intersection[];
 
     /**
    * Checks all intersection between the ray and the octree objects with or without the descendants.
@@ -25,6 +25,6 @@ export declare class OctreeRaycaster extends Raycaster {
    * @param intersects - (optional) target to set the result. Otherwise a new Array is instantiated.
    */
 
-    intersectOctreeObjects<T extends Mesh>( objects: ( OctreeObjectData | ResultData | Object3D )[], recursive?: boolean, intersects?: Intersection<T>[] ): Intersection<T>[];
+    intersectOctreeObjects( objects: ( OctreeObjectData | ResultData | Object3D )[], recursive?: boolean, intersects?: Intersection[] ): Intersection[];
 
 }

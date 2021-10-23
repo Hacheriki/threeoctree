@@ -21,13 +21,13 @@ export class OctreeRaycaster extends Raycaster {
    * @param intersects - (optional) target to set the result. Otherwise a new Array is instantiated.
    */
 
-    intersectOctreeObject<T extends Mesh>( object: OctreeObjectData | ResultData | Object3D, recursive = true, intersects: Intersection<T>[] = [] ): Intersection<T>[] {
+    intersectOctreeObject( object: OctreeObjectData | ResultData | Object3D, recursive = true, intersects: Intersection[] = [] ): Intersection[] {
 
         if ( object instanceof Object3D ) {
 
             // intersect normal object
 
-            intersects.push( ...this.intersectObject<T>( object, recursive ) );
+            intersects.push( ...this.intersectObject( object, recursive ) );
 
         } else if ( object.object instanceof Mesh ) {
 
@@ -60,7 +60,7 @@ export class OctreeRaycaster extends Raycaster {
                     intersects.push( {
                         distance,
                         point: _intersectionPointWorld.clone(),
-                        object: mesh as T,
+                        object: mesh,
                         face
                     } );
                     break;
@@ -71,7 +71,7 @@ export class OctreeRaycaster extends Raycaster {
 
                 // intersect
 
-                intersects.push( ...this.intersectObject<T>( mesh, recursive ) );
+                intersects.push( ...this.intersectObject( mesh, recursive ) );
 
             }
 
@@ -93,11 +93,11 @@ export class OctreeRaycaster extends Raycaster {
    * @param intersects - (optional) target to set the result. Otherwise a new Array is instantiated.
    */
 
-    intersectOctreeObjects<T extends Mesh>( objects: ( OctreeObjectData | ResultData | Object3D )[], recursive = true, intersects: Intersection<T>[] = [] ): Intersection<T>[] {
+    intersectOctreeObjects( objects: ( OctreeObjectData | ResultData | Object3D )[], recursive = true, intersects: Intersection[] = [] ): Intersection[] {
 
         for ( let i = 0, l = objects.length; i < l; i ++ ) {
 
-            intersects.push( ...this.intersectOctreeObject<T>( objects[ i ], recursive ) );
+            intersects.push( ...this.intersectOctreeObject( objects[ i ], recursive ) );
 
         }
 
