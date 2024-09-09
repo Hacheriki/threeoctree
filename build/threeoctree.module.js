@@ -850,9 +850,6 @@ class Octree {
         if (object instanceof OctreeObjectData) {
             object = object.object;
         }
-        if (!(object.geometry instanceof BufferGeometry)) {
-            throw new Error('Unsupported geometry type: Use BufferGeometry!');
-        }
         // check uuid to avoid duplicates
         if (!object.uuid) {
             object.uuid = MathUtils.generateUUID();
